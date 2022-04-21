@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FilmesApi.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -15,6 +16,13 @@ namespace FilmesAPI.Models
         //Colocando como virtual eu defino que essas são Lazy (olha o startup.cs)
         public virtual Endereco Endereco { get; set; }
         public int EnderecoId { get; set; }
+        public virtual Gerente Gerente { get; set; }
+        public int GerenteId { get; set; }
+
+        //Relacionando  N p N
+        //Um cinema vai ter multiplas sessoes
+        [JsonIgnore]
+        public virtual List<Sessao> Sessoes { get; set; }
 
     }
 }
