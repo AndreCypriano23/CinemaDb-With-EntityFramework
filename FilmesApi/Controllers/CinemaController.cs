@@ -35,9 +35,30 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Cinema> RecuperaCinemas([FromQuery] string nomeDoFilme)
+        public IActionResult RecuperaCinemas([FromQuery] string nomeDoFilme)
         {
-            return _context.Cinemas;
+            //A partir do nome do filme eu retorno apenas os cinemas que existem uma sessao que está exibindo esse filme
+            List<Cinema> cinemas = _context.Cinemas.ToList();
+            if(cinemas == null)
+            {   
+                return NotFound();
+            }
+            //Exibindo apenas as sessoes que possuam o titulo do filme que estou passando
+            if(!string.IsNullOrEmpty(nomeDoFilme))
+            {
+                //efetuo uma consulta, antes usei o linq
+                //Mas agora vou fazer uma pesquisa mais complexa
+                IEnumerable<Cinema> query = from cinema in cinemas // a partir de um cinema qualquer da minha lista de cinemas
+                        where cinema.Sessoes.Any(sessao =>
+                        sessao.Filme.Titulo == nomeDoFilme)
+                        select cinema;
+                cinemas = query.ToList();
+            }
+            //Mapear agora
+            List<ReadCinemaDto> readDto = _mapper.Map<List<ReadCinemaDto>>(cinemas);
+
+            return Ok(readDto);
+    
         }
 
         [HttpGet("{id}")]

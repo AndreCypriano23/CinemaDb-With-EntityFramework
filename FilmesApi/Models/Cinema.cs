@@ -24,5 +24,6 @@ namespace FilmesAPI.Models
         [JsonIgnore]
         public virtual List<Sessao> Sessoes { get; set; }
 
+
     }
 }

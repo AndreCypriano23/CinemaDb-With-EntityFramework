@@ -36,9 +36,30 @@ namespace FilmesAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
+        public IActionResult RecuperaFilmes([FromQuery] int? classificacaoEtaria = null)//esse parametro pode ser tanto um nulo quanto um inteiro
         {
-            return _context.Filmes;
+            List<Filme> filmes;
+
+            if (classificacaoEtaria == null)
+            {
+               filmes = _context.Filmes.ToList();
+            }
+            else
+            {
+                //classificacao etária menor ou igual do que a recebida
+                     filmes = _context.Filmes
+                    .Where(filme => filme.ClassificacaoEtaria <= classificacaoEtaria)
+                    .ToList();
+
+            }
+           
+            if(filmes != null)
+            {
+                //convertê-los para read filme dto
+                List<ReadFilmeDto> readDto = _mapper.Map<List<ReadFilmeDto>>(filmes);
+                return Ok(readDto);
+            }
+            return NotFound(); ;
         }
 
         [HttpGet("{id}")]

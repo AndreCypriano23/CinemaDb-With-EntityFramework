@@ -32,6 +32,8 @@ namespace FilmesApi.Controllers
             return CreatedAtAction(nameof(RecuperaSessaoPorId), new { Id = sessao.Id }, sessao);
         }
 
+
+
         [HttpGet("{id}")]
         public IActionResult RecuperaSessaoPorId(int id)
         {
